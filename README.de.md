@@ -15,7 +15,7 @@ Ein LLM kann den Text schreiben – aber in einer Management-Summary darf keine 
 1. **Zahlen prüft der Code, nicht der Leser.** `validate_report` vergleicht jede Zahl des Entwurfs mit den Werkzeugergebnissen der Woche. In der Evaluation über 12 Montage (4 rot, 4 gelb, 4 grün) mit `gpt-6-luna` haben **12 von 12** Berichten bestanden – alle schon mit dem ersten Entwurf –, und eine manuelle Durchsicht aller 12 fand auch im freien Text keine falsche Aussage (z. B. „gestiegene Stornoquote“ = +1,8 Pp ✔). Im End-to-End-Test wird eine erfundene Zahl („71,2 %“) blockiert und geht an die Analyse statt ans Management. Der erste echte Lauf zeigte, wo eine Zahlenprüfung nicht reicht: das Modell gab einer Woche die Regeln einer anderen Kennzahl („Regeln 1, 2, 3“ statt „1, 2“) – kleine Regelnummern bestehen jede Zahlenprüfung. Seitdem schreibt Code die SPC-Zeile, das Modell übernimmt sie wörtlich, und jede Änderung wird abgelehnt.
 2. **Die Ampel ist Statistik, keine Modellmeinung.** Rot/Gelb/Grün entscheidet eine I-MR-Regelkarte mit den vier Western-Electric-Regeln auf Lieferanten-Termintreue, Kunden-Termintreue und Reklamationsquote – dieselben Regeln wie in Six Sigma. Über alle 87 Montage: 45 grün, 17 gelb, 25 rot.
 3. **Minimale Rechte und Mensch in der Schleife.** Der Berichts-Agent bekommt 6 lesende Werkzeuge (keine Rechtssuche, kein Datenbankzugriff, nichts Schreibendes). Die Management-E-Mail ist nur über *Prüfung bestanden → Freigabe-E-Mail → „Freigeben“* erreichbar – in der CI mit der echten n8n-Engine getestet.
-4. **Günstig und schnell:** **0,0013 $ pro Bericht** (≈ 0,07 $ pro Jahr bei wöchentlichen Berichten), Median **13 s** pro Bericht; in n8n 15 s vom Formular bis zur Freigabe-E-Mail. Manuell gemessen: ⟨…⟩ min pro Bericht.
+4. **Günstig und schnell:** **0,0013 $ pro Bericht** (≈ 0,07 $ pro Jahr bei wöchentlichen Berichten), Median **13 s** pro Bericht; in n8n 15 s vom Formular bis zur Freigabe-E-Mail. Manuell, einmal gemessen: ≈ 12 min pro Bericht mit fertigem Dashboard – im BMW-Kundenprojekt etwa ein Arbeitstag inklusive Datenbeschaffung.
 
 ## Daten
 - Gold-Tabellen aus [Projekt 2](https://github.com/Mahsa93-lab/lakehouse-supply-chain-pipeline) (Databricks-Lakehouse auf dem öffentlichen [Olist-Datensatz](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), CC BY-NC-SA 4.0), als Parquet in `data/`:
@@ -61,10 +61,16 @@ Evaluation über 12 Montage – vollständige Tabelle und alle Berichte: [docs/a
 
 **Abgleich mit dem Power-BI-Dashboard aus Projekt 1** (manuell für KW 9/2018): alle neun Werte – fünf Kennzahlen der Woche, Vorwoche, Datenqualität – sind identisch. Ein Lieferant wich um 0,1 Pp ab (15,0 % vs. 15,1 %): die Gold-Tabelle aus Projekt 2 speichert die Quote auf vier Nachkommastellen (0,1505), und Pythons `round()` machte aus 15,05 eine 15,0. Die Werkzeuge runden jetzt kaufmännisch wie Excel und Power BI (mit Test); Screenshots und Evaluation oben stammen von vor dieser Korrektur.
 
-| | Manuell (einmal gemessen) | Mit Agent |
+| Schritt | Manuell (einmal gemessen, KW 9/2018) | Mit Agent |
 |---|---|---|
-| Analyse | ⟨…⟩ min | 0 min (nur bei Ausnahmen) |
-| Teamleitung | ⟨…⟩ min Prüfung | ≈ 1 min Lesen + 1 Klick |
+| Zahlen zusammentragen | 2 min 10 s (Power-BI-Seite mit vorbereitetem Wochenfilter) | – |
+| Auffälligkeiten bewerten | nach Augenmaß am Monatstrend, ohne Regelkarte | SPC-Regeln im Code |
+| Deutsche Summary schreiben | ≈ 10 min | – |
+| **Zeit Analyse** | **≈ 12 min** | **0 min** (nur bei Ausnahmen) |
+| Bis der Entwurf fertig ist | ≈ 12 min | 15 s nach dem Start |
+| Teamleitung | liest und gibt in beiden Fällen frei | liest + 1 Klick |
+
+Ehrlich gelesen: die 12 Minuten setzen saubere Daten und ein fertiges Dashboard voraus. In meinem Kundenprojekt bei BMW dauerte ein vergleichbarer Wochenbericht **etwa einen Arbeitstag** (Erfahrungswert) – vor allem für das Zusammentragen der Daten aus mehreren Quellsystemen, die Konsolidierung und die Plausibilitätsprüfung. Genau diesen Teil automatisieren Projekt 1 und 2 (Dashboard, Pipeline mit Quality Gate); dieses Projekt übernimmt die restlichen 12 Minuten Lesen und Schreiben. 12 Minuten sind rund 10 Stunden pro Jahr für einen Wochenbericht – der größere Gewinn ist Konsistenz: jede Woche dieselben Regeln, jede Zahl geprüft, ein Protokoll pro Lauf; manuell wurden Auffälligkeiten nach Augenmaß bewertet.
 
 ![Prozess Ist vs. Soll](docs/process_as_is_to_be.png)
 
