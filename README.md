@@ -130,11 +130,16 @@ runs/         one JSON log per report run (not committed)
 ```
 
 ## Portfolio
-Part of a four-project portfolio on trustworthy data and AI in supply chain:
-1. [Supplier & delivery performance](https://github.com/Mahsa93-lab/supplier-delivery-performance-powerbi) – SQL Server + Power BI
-2. [Lakehouse supply-chain pipeline](https://github.com/Mahsa93-lab/lakehouse-supply-chain-pipeline) – Databricks, data-quality checks → **the data of this project**
-3. [EU AI Act & GDPR assistant](https://github.com/Mahsa93-lab/eu-ai-act-rag-assistant) – RAG with citations → **the legal search of the chat**
-4. **AI KPI reporting agent** – this repository
+Four connected projects on trustworthy data and AI in supply chain – from the dashboard to the pipeline to the agent:
+
+| # | Project | Question | Stack |
+|---|---|---|---|
+| 1 | [Supplier & Delivery Performance](https://github.com/Mahsa93-lab/supplier-delivery-performance-powerbi) | Which suppliers cause late deliveries – and what do they cost in complaints? | SQL Server · Power BI · DAX |
+| 2 | [Lakehouse Supply-Chain Pipeline](https://github.com/Mahsa93-lab/lakehouse-supply-chain-pipeline) | Can the same KPIs be produced daily, automatically and behind a data-quality gate? | Databricks · PySpark · Delta Lake |
+| 3 | [EU AI Act & GDPR Assistant](https://github.com/Mahsa93-lab/eu-ai-act-rag-assistant) | Can an AI assistant answer legal questions with sources you can check? | RAG · OpenAI · FastAPI · Docker |
+| 4 | **AI KPI Reporting Agent** *(this repository)* | Can an AI agent write the weekly management summary without a single unchecked number? | n8n · MCP · SPC · Docker |
+
+The projects build on each other: project 2 reproduces the numbers of project 1 to the cent (99,441 orders, BRL 13,591,643.70 revenue); the agent in project 4 reads the gold tables of project 2 and uses the search API of project 3.
 
 ---
 *Author: Mahsa Ahmadi · Data: Olist public dataset (CC BY-NC-SA 4.0).*
