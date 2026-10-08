@@ -1,5 +1,7 @@
 # AI KPI Reporting Agent (n8n · MCP · SPC)
 
+[![CI](https://github.com/Mahsa93-lab/ai-kpi-reporting-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Mahsa93-lab/ai-kpi-reporting-agent/actions/workflows/ci.yml)
+
 **English** · [Deutsch](README.de.md)
 
 > Every Monday an AI agent writes the German management summary on supplier and delivery performance. It sees the data only through seven read-only tools, the traffic light comes from control-chart rules instead of the model's opinion, code checks every number in the text, and nothing is sent without a human approval click.
@@ -15,7 +17,7 @@ An LLM can write the text – but management summaries must not contain a single
 1. **Numbers checked by code, not by the reader.** `validate_report` compares every number in the draft with the tool results of that week. In the evaluation on 12 Mondays (4 red, 4 yellow, 4 green) with `gpt-6-luna`, **12 of 12** reports passed – all of them with the first draft – and a manual review of all 12 found no wrong statement in the free text either (e.g. "gestiegene Stornoquote" = +1,8 Pp ✔). In the end-to-end test an invented number ("71,2 %") is blocked and goes to the analyst instead of management. The first real run showed where a number check is not enough: the model gave a week the control-chart rules of another KPI ("Regeln 1, 2, 3" instead of "1, 2") – small rule numbers pass any number check. Since then the SPC line is written by code and copied verbatim, and the check rejects any change to it.
 2. **The traffic light is statistics, not model opinion.** Red/yellow/green is decided by an I-MR control chart with the four Western Electric rules on supplier on-time delivery, customer on-time delivery and complaint rate – the same rules used in Six Sigma. Over all 87 Mondays: 45 green, 17 yellow, 25 red.
 3. **Least privilege and human in the loop.** The report agent gets 6 read-only tools (no legal search, no database access, nothing that writes). The management e-mail is reachable only via *check passed → approval e-mail → "Freigeben"* – tested in CI with the real n8n engine.
-4. **Cheap and fast:** **$0.0013 per report** (≈ $0.07 per year of weekly reports), median **13 s** per report; in n8n 15 s from the form to the approval e-mail. Manual baseline, measured once: ≈ 12 min per report with a finished dashboard – about one working day in my BMW customer project, including data collection.
+4. **Cheap and fast:** **$0.0013 per report** (≈ $0.07 per year of weekly reports), median **13 s** per report; in n8n 15 s from the form to the approval e-mail. Manual baseline, measured once: at least 12 min just to collect the numbers and type them into the German template, with a finished dashboard – about one working day in my BMW customer project, including data collection.
 
 ## Data
 - Gold tables from [project 2](https://github.com/Mahsa93-lab/lakehouse-supply-chain-pipeline) (Databricks lakehouse on the public [Olist e-commerce dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), CC BY-NC-SA 4.0), exported as Parquet to `data/`:
@@ -66,13 +68,13 @@ Time per weekly report:
 | Step | Manual (measured once, KW 9/2018) | With the agent |
 |---|---|---|
 | Collect the numbers | 2 min 10 s (Power BI page with prepared week filter) | – |
-| Judge anomalies | by eye on the monthly trend, no control-chart rules | SPC rules in code |
-| Write the German summary | ≈ 10 min | – |
-| **Analyst time** | **≈ 12 min** | **0 min** (only on exceptions) |
-| Until the draft is ready | ≈ 12 min | 15 s after the trigger |
+| Type the numbers into the German template | ≈ 10 min | – |
+| Judge anomalies, write recommendation | not timed (by eye on the monthly trend, no control-chart rules) | SPC rules in code, text by the agent |
+| **Analyst time** | **≥ 12 min** (numbers only) | **0 min** (only on exceptions) |
+| Until the draft is ready | ≥ 12 min | 15 s after the trigger |
 | Team lead | reads and approves in both cases | reads + 1 click |
 
-Honest reading of these numbers: the 12 minutes assume clean data and a finished dashboard. In my customer project at BMW, a comparable weekly report took **about one working day** (estimate from experience) – most of it collecting data from several source systems, consolidating it and checking plausibility. That part is what projects 1 and 2 automate (dashboard, pipeline with quality gate); this project removes the remaining 12 minutes of reading and writing. Saving 12 minutes is about 10 hours a year for one weekly report – the bigger gain is consistency: the same rules every week, every number checked, a run log; the manual version judged anomalies by eye.
+Honest reading of these numbers: the 12 minutes cover only collecting and typing the numbers – assessment and recommendation come on top – and they assume clean data and a finished dashboard. In my customer project at BMW, a comparable weekly report took **about one working day** (estimate from experience) – most of it collecting data from several source systems, consolidating it and checking plausibility. That part is what projects 1 and 2 automate (dashboard, pipeline with quality gate); this project removes the remaining reading, judging and writing. 12 minutes a week alone are about 10 hours a year for one weekly report – the bigger gain is consistency: the same rules every week, every number checked, a run log; the manual version judged anomalies by eye.
 
 ![Process as-is vs. to-be](docs/process_as_is_to_be.png)
 
