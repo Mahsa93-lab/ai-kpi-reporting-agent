@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest>=8
+ruff>=0.6
+aiosmtpd>=1.4     # fake SMTP server for the end-to-end test

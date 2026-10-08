@@ -1,0 +1,61 @@
+{
+  "id": "kpiErrorNotify01",
+  "name": "Fehlermeldung per E-Mail",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "acb524e5-fdb0-5696-9ab4-538df768f36b",
+      "name": "Fehler in einem Workflow",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "kpi-agent@example.com",
+        "toEmail": "analyse@example.com",
+        "emailFormat": "text",
+        "subject": "=Fehler im Workflow „{{ $json.workflow.name }}“",
+        "text": "=Knoten: {{ $json.execution.lastNodeExecuted }}\nFehler: {{ $json.execution.error.message }}\n{{ $json.execution.error.description || '' }}\nAusführung: {{ $json.execution.url }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4fd65ab8-b938-504a-92e6-2b81b79eeb93",
+      "name": "Fehler melden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        260,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtpMailpit00001",
+          "name": "Mailpit (lokal)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Fehler in einem Workflow": {
+      "main": [
+        [
+          {
+            "node": "Fehler melden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

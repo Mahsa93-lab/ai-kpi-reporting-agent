@@ -1,0 +1,66 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check .
+      - run: pytest -q
+
+  e2e:
+    # runs the real n8n 2.42.4 with the three workflows; only the LLM, SMTP and project 3 are fakes
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: pip install -r requirements-dev.txt
+      - run: npm install -g n8n@2.42.4
+      - name: Same host name and run-log path as in docker compose
+        run: |
+          echo "127.0.0.1 mcp" | sudo tee -a /etc/hosts
+          sudo mkdir -p /home/node/runs && sudo chown "$USER" /home/node/runs
+      - name: End-to-end scenarios
+        env:
+          E2E_DIR: ${{ runner.temp }}/e2e
+        run: |
+          mkdir -p "$E2E_DIR"
+          N8N_CMD="node --no-node-snapshot $(npm root -g)/n8n/bin/n8n" bash tests/e2e/run_e2e.sh
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-logs
+          path: ${{ runner.temp }}/e2e/*.log
+
+  docker:
+    # builds the MCP image and checks that it answers MCP requests; validates docker-compose.yml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t kpi-mcp .
+      - run: docker run -d --name mcp -p 8100:8100 kpi-mcp
+      - name: MCP tools/list
+        run: |
+          for i in $(seq 1 20); do
+            curl -sf -X POST localhost:8100/mcp -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' > tools.json && break
+            sleep 1
+          done
+          python3 -c "import json; t=[x['name'] for x in json.load(open('tools.json'))['result']['tools']]; print(t); assert len(t)==7"
+      - run: N8N_ENCRYPTION_KEY=ci docker compose config --quiet

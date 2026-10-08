@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7D8EA3"/></marker>
+  </defs>
+  <rect width="1200" height="700" fill="#ffffff"/>
+  <text x="30" y="40" font-size="22" font-weight="700" fill="#1D2430">AI KPI reporting agent · n8n + MCP with a deterministic check and human approval</text>
+  <text x="30" y="66" font-size="14" fill="#5B6574">Gold tables (project 2) → MCP server with read-only tools → AI agent in n8n → validate_report → approval e-mail → management</text>
+
+  <!-- row 1: weekly report -->
+  <text x="30" y="104" font-size="13" font-weight="700" fill="#7D8EA3" letter-spacing="1">WEEKLY REPORT · n8n WORKFLOW 1</text>
+  <g>
+    <rect x="30" y="116" width="170" height="120" rx="10" fill="none" stroke="#7D8EA3" stroke-width="1.5"/>
+    <text x="115" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">Trigger</text>
+    <text x="115" y="168" text-anchor="middle" font-size="12.5" fill="#5B6574">every Monday 07:52</text>
+    <text x="115" y="188" text-anchor="middle" font-size="12.5" fill="#5B6574">or form:</text>
+    <text x="115" y="208" text-anchor="middle" font-size="12.5" fill="#5B6574">report for any Monday</text>
+
+    <rect x="240" y="116" width="210" height="120" rx="10" fill="#F3E3D7" stroke="#C0632B" stroke-width="1.5"/>
+    <text x="345" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">AI agent</text>
+    <text x="345" y="168" text-anchor="middle" font-size="12.5" fill="#1D2430">gpt-6-luna · reasoning low</text>
+    <text x="345" y="188" text-anchor="middle" font-size="12.5" fill="#1D2430">system prompt from Git</text>
+    <text x="345" y="208" text-anchor="middle" font-size="12.5" fill="#1D2430">German summary ≤ 180 words</text>
+
+    <rect x="490" y="116" width="220" height="120" rx="10" fill="#FBE3DD" stroke="#B4441E" stroke-width="1.5"/>
+    <text x="600" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">Deterministic check</text>
+    <text x="600" y="168" text-anchor="middle" font-size="12.5" fill="#1D2430">every number from a tool result</text>
+    <text x="600" y="188" text-anchor="middle" font-size="12.5" fill="#1D2430">traffic light = SPC rules</text>
+    <text x="600" y="208" text-anchor="middle" font-size="12.5" fill="#1D2430">calendar week present</text>
+
+    <rect x="750" y="116" width="200" height="120" rx="10" fill="#E5ECF5" stroke="#3E6FA8" stroke-width="1.5"/>
+    <text x="850" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">Human approval</text>
+    <text x="850" y="168" text-anchor="middle" font-size="12.5" fill="#1D2430">e-mail to team lead</text>
+    <text x="850" y="188" text-anchor="middle" font-size="12.5" fill="#1D2430">Freigeben / Ablehnen</text>
+    <text x="850" y="208" text-anchor="middle" font-size="12.5" fill="#1D2430">waits up to 24 h</text>
+
+    <rect x="990" y="116" width="180" height="120" rx="10" fill="#DCEFE4" stroke="#2E8B57" stroke-width="1.5"/>
+    <text x="1080" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">Management</text>
+    <text x="1080" y="168" text-anchor="middle" font-size="12.5" fill="#1D2430">summary e-mail</text>
+    <text x="1080" y="188" text-anchor="middle" font-size="12.5" fill="#1D2430">(HTML + text)</text>
+    <text x="1080" y="208" text-anchor="middle" font-size="12.5" fill="#1D2430">only after approval</text>
+
+    <path d="M200 176H236" stroke="#7D8EA3" stroke-width="1.6" marker-end="url(#a)"/>
+    <path d="M450 176H486" stroke="#7D8EA3" stroke-width="1.6" marker-end="url(#a)"/>
+    <path d="M710 176H746" stroke="#7D8EA3" stroke-width="1.6" marker-end="url(#a)"/>
+    <path d="M950 176H986" stroke="#7D8EA3" stroke-width="1.6" marker-end="url(#a)"/>
+
+    <!-- branches -->
+    <rect x="540" y="262" width="170" height="44" rx="8" fill="#ffffff" stroke="#B4441E" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="625" y="281" text-anchor="middle" font-size="12" fill="#1D2430">check failed → not sent,</text>
+    <text x="625" y="297" text-anchor="middle" font-size="12" fill="#1D2430">draft + problems to analyst</text>
+    <path d="M625 236V258" stroke="#B4441E" stroke-width="1.4" marker-end="url(#a)"/>
+
+    <rect x="760" y="262" width="190" height="44" rx="8" fill="#ffffff" stroke="#3E6FA8" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="855" y="281" text-anchor="middle" font-size="12" fill="#1D2430">rejected / no answer in 24 h</text>
+    <text x="855" y="297" text-anchor="middle" font-size="12" fill="#1D2430">→ not sent, logged</text>
+    <path d="M855 236V258" stroke="#3E6FA8" stroke-width="1.4" marker-end="url(#a)"/>
+
+    <rect x="990" y="262" width="180" height="44" rx="8" fill="#F4F6F9" stroke="#7D8EA3" stroke-width="1.2"/>
+    <text x="1080" y="281" text-anchor="middle" font-size="12" fill="#1D2430">run log runs/*.json</text>
+    <text x="1080" y="297" text-anchor="middle" font-size="12" fill="#1D2430">status · check · approval · time</text>
+    <path d="M1080 236V258" stroke="#7D8EA3" stroke-width="1.4" marker-end="url(#a)"/>
+  </g>
+
+  <!-- row 2: MCP server -->
+  <text x="30" y="344" font-size="13" font-weight="700" fill="#7D8EA3" letter-spacing="1">TOOLS · MCP SERVER (PYTHON)</text>
+  <g>
+    <path d="M345 240V352" stroke="#C0632B" stroke-width="1.6" stroke-dasharray="5 4" marker-start="url(#a)" marker-end="url(#a)"/>
+    <text x="355" y="300" font-size="12" fill="#C0632B">6 tools via MCP</text>
+    <text x="355" y="316" font-size="12" fill="#C0632B">(no legal search)</text>
+    <path d="M505 240V352" stroke="#B4441E" stroke-width="1.6" stroke-dasharray="5 4" marker-start="url(#a)" marker-end="url(#a)"/>
+    <text x="513" y="334" font-size="12" fill="#B4441E">validate_report</text>
+
+    <rect x="30" y="356" width="200" height="160" rx="10" fill="#DCEFE4" stroke="#2E8B57" stroke-width="1.5"/>
+    <text x="130" y="386" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">Gold tables</text>
+    <text x="130" y="408" text-anchor="middle" font-size="12.5" fill="#1D2430">from project 2 (Parquet)</text>
+    <text x="130" y="436" text-anchor="middle" font-size="12.5" fill="#1D2430">weekly KPIs</text>
+    <text x="130" y="456" text-anchor="middle" font-size="12.5" fill="#1D2430">supplier scorecard</text>
+    <text x="130" y="476" text-anchor="middle" font-size="12.5" fill="#1D2430">data-quality results</text>
+    <text x="130" y="500" text-anchor="middle" font-size="12" fill="#5B6574">Olist, 2017–2018</text>
+
+    <rect x="270" y="356" width="640" height="160" rx="10" fill="#E5ECF5" stroke="#3E6FA8" stroke-width="1.5"/>
+    <text x="290" y="384" font-size="15" font-weight="700" fill="#1D2430">MCP server "kpi-server"</text>
+    <text x="490" y="384" font-size="12.5" fill="#5B6574">Streamable HTTP :8100 · all tools read-only · inputs validated</text>
+    <text x="290" y="414" font-size="12.5" fill="#1D2430"><tspan font-weight="700">get_weekly_kpis</tspan> – KPIs + change vs. last week</text>
+    <text x="290" y="438" font-size="12.5" fill="#1D2430"><tspan font-weight="700">assess_week</tspan> – traffic light from SPC signals</text>
+    <text x="290" y="462" font-size="12.5" fill="#1D2430"><tspan font-weight="700">check_spc</tspan> – I-MR chart, Western Electric 1–4</text>
+    <text x="290" y="486" font-size="12.5" fill="#1D2430"><tspan font-weight="700">get_late_suppliers</tspan> – worst suppliers last month</text>
+    <text x="600" y="414" font-size="12.5" fill="#1D2430"><tspan font-weight="700">get_dq_status</tspan> – data-quality score + trend</text>
+    <text x="600" y="438" font-size="12.5" fill="#B4441E"><tspan font-weight="700">validate_report</tspan> – checks the finished text</text>
+    <text x="600" y="462" font-size="12.5" fill="#1D2430"><tspan font-weight="700">search_regulation</tspan> – EU AI Act / GDPR</text>
+    <text x="600" y="486" font-size="12" fill="#5B6574">the LLM never sees the database –</text>
+    <text x="600" y="504" font-size="12" fill="#5B6574">only these 7 functions</text>
+
+    <rect x="950" y="356" width="220" height="160" rx="10" fill="none" stroke="#7D8EA3" stroke-width="1.5"/>
+    <text x="1060" y="386" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">Project 3</text>
+    <text x="1060" y="408" text-anchor="middle" font-size="12.5" fill="#5B6574">RAG assistant</text>
+    <text x="1060" y="436" text-anchor="middle" font-size="12.5" fill="#5B6574">POST /search</text>
+    <text x="1060" y="456" text-anchor="middle" font-size="12.5" fill="#5B6574">articles + EUR-Lex links</text>
+    <text x="1060" y="476" text-anchor="middle" font-size="12.5" fill="#5B6574">(optional)</text>
+
+    <path d="M230 436H266" stroke="#7D8EA3" stroke-width="1.6" marker-end="url(#a)"/>
+    <path d="M910 436H946" stroke="#7D8EA3" stroke-width="1.6" marker-end="url(#a)"/>
+  </g>
+
+  <!-- row 3 -->
+  <g>
+    <rect x="30" y="548" width="360" height="124" rx="10" fill="#F4F6F9" stroke="#7D8EA3" stroke-width="1.5"/>
+    <text x="50" y="576" font-size="15" font-weight="700" fill="#1D2430">Workflow 2 · chat for follow-up questions</text>
+    <text x="50" y="600" font-size="12.5" fill="#1D2430">hosted chat page → agent with memory</text>
+    <text x="50" y="621" font-size="12.5" fill="#1D2430">all 7 tools, incl. search_regulation</text>
+    <text x="50" y="642" font-size="12.5" fill="#1D2430">legal answers with article links</text>
+    <text x="50" y="660" font-size="12" fill="#5B6574">"Dies ist keine Rechtsberatung."</text>
+
+    <rect x="410" y="548" width="330" height="124" rx="10" fill="#F4F6F9" stroke="#7D8EA3" stroke-width="1.5"/>
+    <text x="430" y="576" font-size="15" font-weight="700" fill="#1D2430">Workflow 3 · error handling</text>
+    <text x="430" y="600" font-size="12.5" fill="#1D2430">any failed run → e-mail to analyst</text>
+    <text x="430" y="621" font-size="12.5" fill="#1D2430">node, error message, link to execution</text>
+    <text x="430" y="642" font-size="12.5" fill="#1D2430">e-mails in Mailpit (local test inbox)</text>
+    <text x="430" y="660" font-size="12" fill="#5B6574">docker compose: n8n · mcp · mailpit</text>
+
+    <rect x="760" y="548" width="410" height="124" rx="10" fill="#F4F6F9" stroke="#7D8EA3" stroke-width="1.5"/>
+    <text x="780" y="576" font-size="15" font-weight="700" fill="#1D2430">Tests &amp; evaluation</text>
+    <text x="780" y="600" font-size="12.5" fill="#1D2430">pytest: SPC rules, tools, MCP server, workflow JSON</text>
+    <text x="780" y="621" font-size="12.5" fill="#1D2430">end-to-end: real n8n + fake LLM/SMTP, 7 scenarios</text>
+    <text x="780" y="642" font-size="12.5" fill="#1D2430">agent evaluation: 12 Mondays with the real model</text>
+    <text x="780" y="660" font-size="12" fill="#5B6574">GitHub Actions: lint · tests · e2e · Docker image</text>
+  </g>
+</svg>

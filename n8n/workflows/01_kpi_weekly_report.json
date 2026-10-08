@@ -1,0 +1,641 @@
+{
+  "id": "kpiWeeklyReport1",
+  "name": "KPI-Wochenbericht (Agent + Freigabe)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 7,
+              "triggerAtMinute": 52
+            }
+          ]
+        }
+      },
+      "id": "ad8da0bb-235d-5555-8612-7b1b400cb9c3",
+      "name": "Jeden Montag 07:52",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "KPI-Wochenbericht erzeugen",
+        "formDescription": "Montag wählen, für den der Bericht erstellt wird (Olist-Daten: 2017-01-09 bis 2018-08-27). Leer lassen = neueste Woche.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Montag (as_of)",
+              "fieldType": "date"
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Der Bericht wird erstellt. Die Freigabe-E-Mail erscheint in Mailpit: http://localhost:8025"
+            }
+          }
+        }
+      },
+      "id": "5a199280-16c0-596e-90d7-f51c56cc6706",
+      "name": "Formular: Bericht für einen Montag",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        200
+      ],
+      "webhookId": "5f0c7a52-8a64-4d8e-9a43-1b9d6bcd4e01"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Zeitplan → neueste Woche (as_of leer); Formular → gewählter Montag (leer = neueste Woche)\nconst j = $input.first().json;\nconst fromForm = 'submittedAt' in j;\nconst raw = j['Montag (as_of)'] || '';\nconst as_of = raw ? String(raw).slice(0, 10) : '';\nreturn [{ json: { as_of, trigger: fromForm ? 'Formular' : 'Zeitplan', started_at: new Date().toISOString() } }];"
+      },
+      "id": "79dc85bf-3aef-5d9b-827b-caabc6d2c8a3",
+      "name": "Parameter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Erstelle die Management-Summary. as_of: {{ $json.as_of || 'leer (neueste Woche)' }}",
+        "options": {
+          "systemMessage": "Du bist ein Reporting-Assistent für das Supply-Chain-Management. Du erstellst eine kurze wöchentliche Management-Summary auf Deutsch. Du arbeitest nur mit den Werkzeugen des KPI-Servers.\n\n## Vorgehen (in dieser Reihenfolge)\n1. Rufe get_dq_status, get_weekly_kpis und assess_week auf – jeweils mit dem as_of-Datum aus der Anfrage (leer = neueste Woche).\n2. Wenn der Status von assess_week nicht „grün“ ist: rufe get_late_suppliers auf (top_n = 3).\n3. Schreibe die Summary im Format unten.\n4. Rufe validate_report mit deinem Text und demselben as_of auf. Wenn ok = false: korrigiere genau die genannten Probleme und prüfe erneut (höchstens zweimal).\n5. Gib nur die fertige Summary aus – ohne Einleitung, ohne Erklärung deiner Schritte.\n\n## Regeln\n- Verwende ausschließlich Zahlen aus den Werkzeugergebnissen, genau so gerundet wie geliefert. Rechne nichts selbst aus.\n- Schreibe Zahlen im deutschen Format: Dezimalkomma und Tausenderpunkt (88,6 % · −7,3 Pp · 1.903 Bestellungen · 99,62 %).\n- Die Ampel (🟢/🟡/🔴) kommt immer aus assess_week, nie aus deiner eigenen Einschätzung.\n- Schreibe die Kalenderwoche genau wie geliefert, z. B. „KW 9/2018“.\n- Für „Auffälligkeiten (SPC)“ übernimm den Text `signals_summary` aus assess_week wörtlich – nicht umformulieren, nicht kürzen.\n- Lieferanten nur mit der gekürzten ID aus get_late_suppliers nennen, jeweils mit Termintreue in % und Monat, z. B. „8e6d7754 (13,0 % Termintreue)“.\n- Die Empfehlung ist ein Vorschlag für Menschen, keine Entscheidung. Keine automatischen Sperren oder Sanktionen vorschlagen.\n\n## Format (höchstens 180 Wörter)\n**{Kalenderwoche} – Lieferperformance**\n**Status:** {Ampel} stabil / beobachten / Handlungsbedarf\n**Kennzahlen:** Lieferanten-Termintreue … % (… Pp), Kunden-Termintreue … % (… Pp), Reklamationsquote … %, Ø Lieferzeit … Tage, … Bestellungen\n**Auffälligkeiten (SPC):** {signals_summary aus assess_week, wörtlich}\n**Betroffene Lieferanten ({Monat}):** ID (… % Termintreue), … (nur wenn der Status nicht grün ist)\n**Empfehlung:** 1–2 konkrete nächste Schritte\n**Datenqualität:** … % (… Befunde), Trend",
+          "maxIterations": 12
+        }
+      },
+      "id": "d23e2049-7818-538b-ac67-244323e9c040",
+      "name": "KI-Agent: Wochenbericht",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        480,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-6-luna"
+        },
+        "responsesApiEnabled": true,
+        "options": {
+          "extraBody": "{\"reasoning\": {\"effort\": \"low\"}}",
+          "maxRetries": 3,
+          "timeout": 120000
+        }
+      },
+      "id": "f1edd9c3-8093-565b-826f-5d108fc80fe1",
+      "name": "OpenAI gpt-6-luna",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        320
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "openAiKpiAgent01",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://mcp:8100/mcp",
+        "serverTransport": "httpStreamable",
+        "include": "except",
+        "options": {},
+        "excludeTools": [
+          "search_regulation"
+        ]
+      },
+      "id": "fc36508b-cb9c-5589-b282-7cd618e87f9e",
+      "name": "KPI-MCP-Server",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://mcp:8100/mcp",
+        "serverTransport": "httpStreamable",
+        "tool": {
+          "__rl": true,
+          "mode": "id",
+          "value": "validate_report"
+        },
+        "inputMode": "json",
+        "jsonInput": "={{ JSON.stringify({ text: $json.output, as_of: $('Parameter').first().json.as_of || null }) }}",
+        "options": {}
+      },
+      "id": "e556b4c9-460b-5548-b918-2ec3b5199413",
+      "name": "Prüfen: validate_report",
+      "type": "@n8n/n8n-nodes-langchain.mcpClient",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Bericht des Agenten + Ergebnis der deterministischen Prüfung (validate_report) zusammenführen\nconst report = $('KI-Agent: Wochenbericht').first().json.output || '';\nconst content = $input.first().json.content || [];\nconst check = typeof content[0]?.text === 'object' ? content[0].text : JSON.parse(content[0]?.text || '{}');\n// E-Mail-Fassungen: Text ohne Markdown-Sternchen, HTML mit fetten Überschriften (Inhalt wird escaped)\nconst esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst report_text = report.replace(/\\*\\*/g, '');\nconst report_html = report.split('\\n').map((l) => esc(l).replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')).join('<br>\\n');\nreturn [{ json: {\n  report, report_text, report_html, ok: check.ok === true,\n  problems: check.problems || ['Keine Antwort von validate_report'],\n  calendar_week: check.calendar_week, expected_status: check.expected_status,\n  report_ready_at: new Date().toISOString(),\n  ...$('Parameter').first().json,\n} }];"
+      },
+      "id": "1af3f1ad-af25-56f3-8e25-6e3bbb9ca04d",
+      "name": "Bericht + Prüfung",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "ok",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "76984d36-0e34-51aa-97c8-d441bda23ccb",
+      "name": "Prüfung bestanden?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "fromEmail": "kpi-agent@example.com",
+        "toEmail": "teamleitung@example.com",
+        "subject": "=Freigabe: Management-Summary {{ $json.calendar_week }}",
+        "message": "=Bitte den Entwurf prüfen. Die Zahlen wurden automatisch gegen die KPI-Daten geprüft ({{ $json.calendar_week }}).\n\n{{ $json.report_text }}\n\nNach Ihrem Klick erhalten Sie eine Bestätigung per E-Mail. Es zählt nur der erste Klick.",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Freigeben",
+            "disapproveLabel": "Ablehnen"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "limitType": "afterTimeInterval",
+              "resumeAmount": 24,
+              "resumeUnit": "hours"
+            }
+          },
+          "appendAttribution": false
+        }
+      },
+      "id": "49226539-2596-544a-8fd1-9956c054716f",
+      "name": "Freigabe per E-Mail",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        0
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtpMailpit00001",
+          "name": "Mailpit (lokal)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "approved",
+              "leftValue": "={{ $json.data?.approved }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1abbeea-7231-59c0-92f5-b08eab7680c1",
+      "name": "Freigegeben?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "kpi-agent@example.com",
+        "toEmail": "management@example.com",
+        "emailFormat": "both",
+        "subject": "=Management-Summary {{ $('Bericht + Prüfung').first().json.calendar_week }}",
+        "text": "={{ $('Bericht + Prüfung').first().json.report_text }}\n\n– Erstellt vom KPI-Agenten, freigegeben durch die Teamleitung.",
+        "html": "=<div style=\"font-family:Arial,sans-serif;font-size:14px;line-height:1.5\">{{ $('Bericht + Prüfung').first().json.report_html }}<br><br><span style=\"color:#666\">– Erstellt vom KPI-Agenten, freigegeben durch die Teamleitung.</span></div>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "c4e826c7-47b3-5e02-ab15-e05e5e71ee20",
+      "name": "An Management senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2000,
+        -80
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtpMailpit00001",
+          "name": "Mailpit (lokal)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "kpi-agent@example.com",
+        "toEmail": "analyse@example.com",
+        "emailFormat": "text",
+        "subject": "=Bericht {{ $json.calendar_week }} nicht versendet – Prüfung fehlgeschlagen",
+        "text": "=Der Entwurf des KPI-Agenten hat die Prüfung nicht bestanden und wurde nicht zur Freigabe geschickt.\n\nProbleme:\n{{ $json.problems.join('\\n') }}\n\nEntwurf:\n{{ $json.report_text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5bf71e8d-519c-5941-b844-d83517a3ecf8",
+      "name": "Hinweis an Analyse",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        240
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtpMailpit00001",
+          "name": "Mailpit (lokal)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "kpi-agent@example.com",
+        "toEmail": "teamleitung@example.com",
+        "emailFormat": "text",
+        "subject": "=✅ Freigegeben: Management-Summary {{ $('Bericht + Prüfung').first().json.calendar_week }} – an das Management gesendet",
+        "text": "=Ihre Freigabe ist angekommen. Die Management-Summary {{ $('Bericht + Prüfung').first().json.calendar_week }} wurde am {{ $now.toFormat('dd.MM.yyyy') }} um {{ $now.toFormat('HH:mm') }} Uhr an {{ $('An Management senden').first().json.accepted.join(', ') }} gesendet.\n\nWeitere Klicks in der Freigabe-E-Mail ändern nichts mehr.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f7e72ae6-0cfe-53c9-8302-3d7bc4cd31d5",
+      "name": "Bestätigung: freigegeben",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2240,
+        -80
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtpMailpit00001",
+          "name": "Mailpit (lokal)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "kpi-agent@example.com",
+        "toEmail": "teamleitung@example.com",
+        "emailFormat": "text",
+        "subject": "={{ $json.data?.approved === false ? '❌ Abgelehnt' : '⏰ Keine Antwort in 24 h' }}: Management-Summary {{ $('Bericht + Prüfung').first().json.calendar_week }} – nicht versendet",
+        "text": "={{ $json.data?.approved === false ? 'Sie haben den Entwurf abgelehnt.' : 'Die Freigabe wurde nicht innerhalb von 24 Stunden erteilt.' }} Die Management-Summary {{ $('Bericht + Prüfung').first().json.calendar_week }} wurde nicht an das Management gesendet ({{ $now.toFormat('dd.MM.yyyy HH:mm') }} Uhr). Der Lauf ist im Protokoll vermerkt.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "8c6848bb-342c-5668-99ff-c52256b5fb77",
+      "name": "Bestätigung: nicht versendet",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2000,
+        120
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "smtpMailpit00001",
+          "name": "Mailpit (lokal)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ein Protokolleintrag pro Lauf: Dauer (Agent vs. gesamt inkl. Warten auf Freigabe), Prüfung, Freigabe\nconst base = $('Bericht + Prüfung').first().json;\nconst approval = $('Freigabe per E-Mail').isExecuted ? $('Freigabe per E-Mail').first().json : null;\nconst answer = approval?.data?.approved;\nconst finished = new Date();\nconst secs = (a, b) => Math.round((new Date(b) - new Date(a)) / 100) / 10;\nreturn [{ json: {\n  as_of: base.as_of || null, trigger: base.trigger, calendar_week: base.calendar_week, status: base.expected_status,\n  validation_ok: base.ok, problems: base.ok ? [] : base.problems,\n  approval: !approval ? 'nicht angefragt' : answer === true ? 'freigegeben' : answer === false ? 'abgelehnt' : 'keine Antwort',\n  sent_to_management: $('An Management senden').isExecuted,\n  started_at: base.started_at, report_ready_at: base.report_ready_at, finished_at: finished.toISOString(),\n  agent_duration_s: secs(base.started_at, base.report_ready_at),\n  total_duration_s: secs(base.started_at, finished),\n  report: base.report,\n} }];"
+      },
+      "id": "1e094b92-a2e6-5eee-b74d-7125f41f1d2a",
+      "name": "Lauf protokollieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2480,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true
+        }
+      },
+      "id": "aa7526d6-e639-58df-854e-ad3df8915403",
+      "name": "Als JSON",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2720,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/runs/{{ $now.toFormat('yyyy-MM-dd_HHmmss') }}_{{ ($('Lauf protokollieren').first().json.calendar_week || 'KW').replace(/[^A-Za-z0-9]+/g, '-') }}.json",
+        "options": {}
+      },
+      "id": "9010d1b7-068e-5615-96a6-45bfc6f8204b",
+      "name": "In runs/ speichern",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Jeden Montag 07:52": {
+      "main": [
+        [
+          {
+            "node": "Parameter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formular: Bericht für einen Montag": {
+      "main": [
+        [
+          {
+            "node": "Parameter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parameter": {
+      "main": [
+        [
+          {
+            "node": "KI-Agent: Wochenbericht",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KI-Agent: Wochenbericht": {
+      "main": [
+        [
+          {
+            "node": "Prüfen: validate_report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prüfen: validate_report": {
+      "main": [
+        [
+          {
+            "node": "Bericht + Prüfung",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bericht + Prüfung": {
+      "main": [
+        [
+          {
+            "node": "Prüfung bestanden?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prüfung bestanden?": {
+      "main": [
+        [
+          {
+            "node": "Freigabe per E-Mail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Hinweis an Analyse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Freigabe per E-Mail": {
+      "main": [
+        [
+          {
+            "node": "Freigegeben?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Freigegeben?": {
+      "main": [
+        [
+          {
+            "node": "An Management senden",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bestätigung: nicht versendet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "An Management senden": {
+      "main": [
+        [
+          {
+            "node": "Bestätigung: freigegeben",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestätigung: freigegeben": {
+      "main": [
+        [
+          {
+            "node": "Lauf protokollieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestätigung: nicht versendet": {
+      "main": [
+        [
+          {
+            "node": "Lauf protokollieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hinweis an Analyse": {
+      "main": [
+        [
+          {
+            "node": "Lauf protokollieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lauf protokollieren": {
+      "main": [
+        [
+          {
+            "node": "Als JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Als JSON": {
+      "main": [
+        [
+          {
+            "node": "In runs/ speichern",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI gpt-6-luna": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "KI-Agent: Wochenbericht",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KPI-MCP-Server": {
+      "ai_tool": [
+        [
+          {
+            "node": "KI-Agent: Wochenbericht",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "errorWorkflow": "kpiErrorNotify01",
+    "saveManualExecutions": true
+  },
+  "tags": []
+}

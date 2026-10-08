@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 710" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7D8EA3"/></marker></defs>
+  <rect width="1200" height="710" fill="#ffffff"/>
+  <text x="30" y="40" text-anchor="start" font-size="22" font-weight="700" fill="#1D2430">Weekly management summary · process before and after</text>
+  <text x="30" y="66" text-anchor="start" font-size="14" font-weight="400" fill="#5B6574">Simplified BPMN. As-is = the usual manual routine in a supply-chain analytics team; to-be = this project.</text>
+  <text x="30" y="104" text-anchor="start" font-size="13" font-weight="700" fill="#7D8EA3">AS-IS · MANUAL</text>
+  <rect x="30" y="114" width="1140" height="110" fill="none" stroke="#C9D1DC" stroke-width="1"/>
+  <rect x="30" y="114" width="34" height="110" fill="#F4F6F9" stroke="#C9D1DC" stroke-width="1"/>
+  <text transform="translate(52 169.0) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#1D2430">Analyst</text>
+  <rect x="30" y="224" width="1140" height="90" fill="none" stroke="#C9D1DC" stroke-width="1"/>
+  <rect x="30" y="224" width="34" height="90" fill="#F4F6F9" stroke="#C9D1DC" stroke-width="1"/>
+  <text transform="translate(52 269.0) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#1D2430">Team lead</text>
+  <circle cx="95" cy="169" r="13" fill="#fff" stroke="#1D2430" stroke-width="1.5"/>
+  <rect x="125" y="140" width="150" height="58" rx="9" fill="#ffffff" stroke="#7D8EA3" stroke-width="1.5"/>
+  <text x="200.0" y="165.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">export data</text>
+  <text x="200.0" y="181.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">(BI / Excel)</text>
+  <rect x="300" y="140" width="150" height="58" rx="9" fill="#ffffff" stroke="#7D8EA3" stroke-width="1.5"/>
+  <text x="375.0" y="165.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">calculate KPIs,</text>
+  <text x="375.0" y="181.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">compare to last week</text>
+  <rect x="475" y="140" width="150" height="58" rx="9" fill="#FBE3DD" stroke="#B4441E" stroke-width="1.5"/>
+  <text x="550.0" y="165.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">judge outliers</text>
+  <text x="550.0" y="181.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">(experience, no rules)</text>
+  <rect x="650" y="140" width="150" height="58" rx="9" fill="#ffffff" stroke="#7D8EA3" stroke-width="1.5"/>
+  <text x="725.0" y="165.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">write summary,</text>
+  <text x="725.0" y="181.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">check numbers by hand</text>
+  <rect x="825" y="240" width="120" height="58" rx="9" fill="#ffffff" stroke="#7D8EA3" stroke-width="1.5"/>
+  <text x="885.0" y="273.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">review</text>
+  <path d="M990 249L1010 269L990 289L970 269z" fill="#fff" stroke="#1D2430" stroke-width="1.5"/>
+  <text x="990" y="274" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">×</text>
+  <rect x="1035" y="140" width="120" height="58" rx="9" fill="#ffffff" stroke="#7D8EA3" stroke-width="1.5"/>
+  <text x="1095.0" y="165.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">send to</text>
+  <text x="1095.0" y="181.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">management</text>
+  <circle cx="1095" cy="280" r="13" fill="#fff" stroke="#1D2430" stroke-width="3.5"/>
+  <path d="M108 169H121" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M275 169H296" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M450 169H471" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M625 169H646" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M800 169H885V236" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M945 269H966" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M990 249V169H1031" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="997" y="215" text-anchor="start" font-size="11" font-weight="400" fill="#5B6574">ok</text>
+  <path d="M990 289V306H725V202" fill="none" stroke="#B4441E" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <text x="775" y="301" text-anchor="middle" font-size="11" font-weight="400" fill="#B4441E">corrections</text>
+  <path d="M1095 198V263" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="860" y="128" text-anchor="start" font-size="11" font-weight="400" fill="#5B6574">each week: time measured in the results table</text>
+  <text x="30" y="368" text-anchor="start" font-size="13" font-weight="700" fill="#7D8EA3">TO-BE · AI AGENT WITH GUARDRAILS</text>
+  <rect x="30" y="378" width="1140" height="120" fill="none" stroke="#C9D1DC" stroke-width="1"/>
+  <rect x="30" y="378" width="34" height="120" fill="#F4F6F9" stroke="#C9D1DC" stroke-width="1"/>
+  <text transform="translate(52 438.0) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#1D2430">n8n + MCP</text>
+  <rect x="30" y="498" width="1140" height="90" fill="none" stroke="#C9D1DC" stroke-width="1"/>
+  <rect x="30" y="498" width="34" height="90" fill="#F4F6F9" stroke="#C9D1DC" stroke-width="1"/>
+  <text transform="translate(52 543.0) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#1D2430">Team lead</text>
+  <rect x="30" y="588" width="1140" height="80" fill="none" stroke="#C9D1DC" stroke-width="1"/>
+  <rect x="30" y="588" width="34" height="80" fill="#F4F6F9" stroke="#C9D1DC" stroke-width="1"/>
+  <text transform="translate(52 628.0) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700" fill="#1D2430">Analyst</text>
+  <circle cx="95" cy="438" r="13" fill="#fff" stroke="#1D2430" stroke-width="1.5"/>
+  <text x="95" y="442" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">⏱</text>
+  <text x="95" y="468" text-anchor="middle" font-size="11" font-weight="400" fill="#5B6574">Mon 07:52</text>
+  <rect x="125" y="409" width="150" height="58" rx="9" fill="#F3E3D7" stroke="#C0632B" stroke-width="1.5"/>
+  <text x="200.0" y="434.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">agent reads KPIs</text>
+  <text x="200.0" y="450.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">via MCP tools</text>
+  <rect x="300" y="409" width="150" height="58" rx="9" fill="#E5ECF5" stroke="#3E6FA8" stroke-width="1.5"/>
+  <text x="375.0" y="434.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">traffic light from</text>
+  <text x="375.0" y="450.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">SPC rules (code)</text>
+  <rect x="475" y="409" width="150" height="58" rx="9" fill="#F3E3D7" stroke="#C0632B" stroke-width="1.5"/>
+  <text x="550.0" y="434.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">agent writes</text>
+  <text x="550.0" y="450.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">summary</text>
+  <rect x="650" y="409" width="150" height="58" rx="9" fill="#FBE3DD" stroke="#B4441E" stroke-width="1.5"/>
+  <text x="725.0" y="434.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">validate_report</text>
+  <text x="725.0" y="450.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">(code)</text>
+  <path d="M840 418L860 438L840 458L820 438z" fill="#fff" stroke="#1D2430" stroke-width="1.5"/>
+  <text x="840" y="443" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">×</text>
+  <rect x="890" y="514" width="130" height="58" rx="9" fill="#E5ECF5" stroke="#3E6FA8" stroke-width="1.5"/>
+  <text x="955.0" y="539.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">approve in</text>
+  <text x="955.0" y="555.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">e-mail (1 click)</text>
+  <path d="M1060 523L1080 543L1060 563L1040 543z" fill="#fff" stroke="#1D2430" stroke-width="1.5"/>
+  <text x="1060" y="548" text-anchor="middle" font-size="15" font-weight="700" fill="#1D2430">×</text>
+  <rect x="1015" y="409" width="110" height="58" rx="9" fill="#DCEFE4" stroke="#2E8B57" stroke-width="1.5"/>
+  <text x="1070.0" y="442.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">send + log</text>
+  <circle cx="1148" cy="438" r="13" fill="#fff" stroke="#1D2430" stroke-width="3.5"/>
+  <rect x="890" y="600" width="150" height="58" rx="9" fill="#ffffff" stroke="#7D8EA3" stroke-width="1.5"/>
+  <text x="965.0" y="625.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">fix data or prompt</text>
+  <text x="965.0" y="641.0" text-anchor="middle" font-size="12" font-weight="400" fill="#1D2430">(only exceptions)</text>
+  <path d="M108 438H121" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M275 438H296" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M450 438H471" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M625 438H646" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M800 438H816" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M840 458V543H886" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="848" y="500" text-anchor="start" font-size="11" font-weight="400" fill="#5B6574">ok</text>
+  <path d="M860 438H870V629H886" fill="none" stroke="#B4441E" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <text x="864" y="592" text-anchor="end" font-size="11" font-weight="400" fill="#B4441E">failed</text>
+  <path d="M1020 543H1036" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <path d="M1060 523V467" fill="none" stroke="#2E8B57" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="1068" y="505" text-anchor="start" font-size="11" font-weight="400" fill="#2E8B57">yes</text>
+  <path d="M1080 543H1110V640H1044" fill="none" stroke="#3E6FA8" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <text x="1120" y="600" text-anchor="start" font-size="11" font-weight="400" fill="#3E6FA8">no</text>
+  <path d="M1125 438H1131" fill="none" stroke="#7D8EA3" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="30" y="694" text-anchor="start" font-size="12.5" font-weight="400" fill="#5B6574">Errors in any step trigger a separate error workflow (e-mail to the analyst). Every run is written to runs/*.json.</text>
+</svg>

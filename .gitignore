@@ -1,0 +1,36 @@
+# Secrets – never commit
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+.ruff_cache/
+
+# Data (download it, don't commit it – document the source in the README)
+data/raw/
+*.csv
+*.parquet
+# small gold tables from project 2 – needed by the MCP server, the Docker image and CI
+!data/*.parquet
+!data/**/*example*
+chroma_db/
+
+# Power BI temp files
+*.pbix.bak
+~$*
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Run logs of the agent (local results)
+runs/*
+!runs/.gitkeep

@@ -1,0 +1,157 @@
+{
+  "id": "kpiChatAssist001",
+  "name": "KPI-Chat (Rückfragen + DSGVO/KI-VO)",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "hostedChat",
+        "initialMessages": "Hallo! Ich beantworte Rückfragen zum KPI-Wochenbericht – z. B. „Warum war KW 9/2018 rot?“ oder „Was sagt die DSGVO zu automatisierten Entscheidungen?“",
+        "options": {
+          "title": "KPI-Assistent",
+          "subtitle": "Rückfragen zur Lieferperformance",
+          "inputPlaceholder": "Frage eingeben …",
+          "loadPreviousSession": "memory"
+        }
+      },
+      "id": "292db694-d3dc-5146-905f-08998014ebf8",
+      "name": "Chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "0b7e5d2c-3f4a-4b8e-9c1d-6a2f8e4b7c90"
+    },
+    {
+      "parameters": {
+        "promptType": "auto",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "Du bist ein Assistent für Rückfragen zur wöchentlichen Lieferperformance (Supply Chain). Du antwortest auf Deutsch, knapp und sachlich, und arbeitest nur mit den Werkzeugen des KPI-Servers.\n\n## Regeln\n- Zahlen, Ampelstatus, Regelkarten-Signale und Lieferanten-IDs nur aus Werkzeugergebnissen. Rechne nichts selbst aus und erfinde nichts.\n- Wenn ein Datum genannt wird (z. B. „Montag, 5. März 2018“), übergib es als as_of im Format JJJJ-MM-TT.\n- Bei Fragen zu Recht, Datenschutz oder KI-Regulierung (DSGVO, KI-Verordnung) rufe search_regulation auf und nenne die gefundenen Artikel mit Link. Gib den Inhalt nur so wieder, wie er im Auszug steht, und schließe mit: „Hinweis: Dies ist keine Rechtsberatung.“\n- Wenn ein Werkzeug „available: false“ meldet, sage das offen, statt zu raten.\n- Du kannst nichts ändern, sperren oder versenden – du beantwortest nur Fragen.",
+          "maxIterations": 8
+        }
+      },
+      "id": "1fe110a5-eeb5-5c27-a776-903850f88166",
+      "name": "KI-Agent: Rückfragen",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-6-luna"
+        },
+        "responsesApiEnabled": true,
+        "options": {
+          "extraBody": "{\"reasoning\": {\"effort\": \"low\"}}",
+          "maxRetries": 3,
+          "timeout": 120000
+        }
+      },
+      "id": "f1edd9c3-8093-565b-826f-5d108fc80fe1",
+      "name": "OpenAI gpt-6-luna",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        220
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "openAiKpiAgent01",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "a83886d7-aa5a-5f5c-bed4-c976f47d61c6",
+      "name": "Gesprächsverlauf",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://mcp:8100/mcp",
+        "serverTransport": "httpStreamable",
+        "include": "all",
+        "options": {}
+      },
+      "id": "fc36508b-cb9c-5589-b282-7cd618e87f9e",
+      "name": "KPI-MCP-Server",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        220
+      ]
+    }
+  ],
+  "connections": {
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "KI-Agent: Rückfragen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI gpt-6-luna": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "KI-Agent: Rückfragen",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gesprächsverlauf": {
+      "ai_memory": [
+        [
+          {
+            "node": "KI-Agent: Rückfragen",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KPI-MCP-Server": {
+      "ai_tool": [
+        [
+          {
+            "node": "KI-Agent: Rückfragen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "errorWorkflow": "kpiErrorNotify01"
+  },
+  "tags": []
+}
